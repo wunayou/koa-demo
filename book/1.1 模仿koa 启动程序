@@ -1,0 +1,29 @@
+
+
+### 实现在koa use 与listen
+
+```
+const http = require('http')
+module.exports = class Application {
+	constructor() {
+		this.middleware = [];
+	}
+	listen(...args) {
+		const server = http.createServer(this.callback())
+		return server.listen(...args)
+	}
+	callback() {
+		// const fn = compose(this.middleware)  //组合函数
+		const fn2 = function(arr){
+			return arr[0]
+		}
+		const fn = this.middleware[0]
+		return fn(req, res);
+	}
+	use(fn) {
+		this.middleware.push(fn);
+		return this;
+	}
+}
+```
+这里没有实现 ctx 与koa 洋葱模型
